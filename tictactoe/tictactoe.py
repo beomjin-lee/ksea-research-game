@@ -6,7 +6,7 @@ def vertical_check(board):
     if first_column or second_column or third_column:
         return True
     else:
-        return False 
+        return False
 
 def horizontal_check(board):
     # TODO:
@@ -32,21 +32,28 @@ def draw_check(board):
         print('Draw!')
         return True
 
+def game_print(board):
+
+def change_player(player):
+
+def number_to_coord(number):
+    
 
 def main():
     board = {
-        (0, 0) : 0,
-        (0, 1) : 0,
-        (0, 2) : 0,
-        (1, 0) : 0,
-        (1, 1) : 0,
-        (1, 2) : 0,
-        (2, 0) : 0,
-        (2, 1) : 0,
-        (2, 2) : 0
+        (0, 0) : ' ',
+        (0, 1) : ' ',
+        (0, 2) : ' ',
+        (1, 0) : ' ',
+        (1, 1) : ' ',
+        (1, 2) : ' ',
+        (2, 0) : ' ',
+        (2, 1) : ' ',
+        (2, 2) : ' '
     }
 
     step = 0
+    player = 0
 
     while step < 9:
 
