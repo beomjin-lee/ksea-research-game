@@ -5,7 +5,14 @@ def horizontal_check(board):
     ## # TODO:
 
 def diagonal_check(board):
-    # # TODO:
+    if board[(0, 0)] == board[(1, 1)] and board[(1, 1)] == board[(2, 2)]:
+        return True
+
+    elif board[(0, 2)] == board[(1, 1)] and board[(1, 1)] == board[(2, 0)]:
+        return True
+
+    else:
+        return False
 
 def draw_check(board):
     # TODO:
