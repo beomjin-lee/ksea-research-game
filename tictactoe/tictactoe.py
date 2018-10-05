@@ -1,9 +1,5 @@
 def vertical_check(board):
     # TODO:
-    # if x of key(x,y) is 0 or 1 or 2 -> vertical
-    # (0, 0) (0, 1) (0, 2) check
-    # (1, 0) (1, 1) (1, 2) check
-    # (2, 0) (2, 1) (2, 2) check
     first_column = (board[(0, 0)] and board[(0, 1)] and board[(0, 2)] == 1)
     second_column = (board[(1, 0)] and board[(1, 1)] and board[(1, 2)] == 1)
     third_column = (board[(2, 0)] and board[(2, 1)] and board[(2, 2)] == 1)
@@ -17,11 +13,24 @@ def horizontal_check(board):
 
 
 def diagonal_check(board):
+
     # TODO:
+    if board[(0, 0)] == board[(1, 1)] and board[(1, 1)] == board[(2, 2)]:
+        return True
+    elif board[(0, 2)] == board[(1, 1)] and board[(1, 1)] == board[(2, 0)]:
+        return True
+    else:
+        return False
 
 
 def draw_check(board):
-    # TODO:
+    vertical = vertical_check(board)
+    horizontal = horizontal_check(board)
+    diagonal = diagonal_check(board)
+
+    if not vertical or not horizontal or not diagonal:
+        print('Draw!')
+        return True
 
 
 def main():
@@ -38,6 +47,9 @@ def main():
     }
 
     step = 0
+
+    while step < 9:
+
 
 
 
