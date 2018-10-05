@@ -6,10 +6,18 @@ def vertical_check(board):
     if first_column or second_column or third_column:
         return True
     else:
-        return False 
+        return False
 
 def horizontal_check(board):
     # TODO:
+    if (board[(0, 0)] == board[(1, 0)] and  board[(1, 0)] == board[(2, 0)]):
+        return True
+    elif (board[(0, 1)] == board[(1, 1)] and  board[(1, 1)] == board[(2, 1)]):
+        return True
+    elif (board[(0, 2)] == board[(1, 2)] and  board[(1, 2)] == board[(2, 2)]):
+        return True
+    else:
+        return False
 
 
 def diagonal_check(board):
