@@ -15,7 +15,13 @@ def diagonal_check(board):
         return False
 
 def draw_check(board):
-    # TODO:
+    vertical = vertical_check(board)
+    horizontal = horizontal_check(board)
+    diagonal = diagonal_check(board)
+
+    if not vertical or not horizontal or not diagonal:
+        print('Draw!')
+        return True
 
 def main():
     board = {
@@ -31,6 +37,9 @@ def main():
     }
 
     step = 0
+
+    while step < 9:
+
 
 
 
