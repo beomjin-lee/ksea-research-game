@@ -98,11 +98,21 @@ def main():
         play(board, player)
         game_print(board)
 
+        diag_chk = diagonal_check(board)
+        h_check = horizontal_check(board)
+        v_check = vertical_check(board)
+
+        if diag_chk or h_check or v_check:
+            print("Win!")
+            another_game = input("Another game? [y/n]")
+            if another_game == "y":
+                main()
+            else:
+                break
+
+
         if step == 8:
             d_chk = draw_check(board)
-            diag_chk = diagonal_check(board)
-            h_check = horizontal_check(board)
-            v_check = vertical_check(board)
 
             if diag_chk or h_check or v_check:
                 print("Win!")
