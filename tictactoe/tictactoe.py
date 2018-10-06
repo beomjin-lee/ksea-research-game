@@ -34,9 +34,13 @@ def draw_check(board):
 
 def game_print(board):
 
+
 def change_player(player):
+    player = 1 - player
 
 def number_to_coord(number):
+
+def play(board, player):
     
 
 def main():
