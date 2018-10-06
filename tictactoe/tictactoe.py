@@ -40,6 +40,17 @@ def draw_check(board):
         return True
 
 def game_print(board):
+    print("   |   |   ")
+    print(" " + board[(0, 2)] + " | " + board[(1, 2)] + " | " + board[(2, 2)] + " ")
+    print("   |   |   ")
+    print("---|---|---")
+    print("   |   |   ")
+    print(" " + board[(0, 1)] + " | " + board[(1, 1)] + " | " + board[(2, 1)] + " ")
+    print("   |   |   ")
+    print("---|---|---")
+    print("   |   |   ")
+    print(" " + board[(0, 0)] + " | " + board[(1, 0)] + " | " + board[(2, 0)] + " ")
+    print("   |   |   ")
 
 
 def change_player(player):
