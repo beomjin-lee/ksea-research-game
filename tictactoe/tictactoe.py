@@ -37,7 +37,6 @@ def draw_check(board):
     diagonal = diagonal_check(board)
 
     if not vertical or not horizontal or not diagonal:
-        print('Draw!')
         return True
 
 def game_print(board):
@@ -50,7 +49,7 @@ def number_to_coord(number):
     if number > 9:
         print("Invalid number")
         break
-        
+
     horizontal = (number - 1) % 3
     vertical = (number - 1) // 3
     return (horizontal, vertical)
@@ -61,7 +60,15 @@ def play(board, player):
     else:
         player_piece = 'O'
 
+    move = raw_input("Name me your move!")
 
+    while move > 9 or move < 1:
+        print("Wrong input!")
+        move = raw_input("Name me your move!")
+
+    coord = number_to_coord(move)
+
+    board[coord] = player_piece
 
 def main():
     board = {
@@ -80,10 +87,30 @@ def main():
     player = 0
 
     while step < 9:
+        change_player(player)
+        play(board, player)
+        game_print(board)
 
+        if step == 8:
+            d_chk = draw_check(board)
+            diag_chk = diagonal_check(board)
+            h_check = horizontal_check(board)
+            v_check = vertical_check(board)
 
+            if diag_chk or h_check or v_check:
+                print("Win!")
+            elif d_chk:
+                print("Draw!")
+            else:
+                print("Lose!")
 
+            another_game = raw_input("Another game? [y/n]")
+            if another_game == "y":
+                main()
+            else:
+                break
 
+        step += 1
 
 if __name__ == "__main__":
     main()
