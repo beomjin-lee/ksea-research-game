@@ -1,8 +1,8 @@
 def vertical_check(board):
     # TODO:
-    first_column = board[(0, 0)] == board[(0, 1)] and board[(0, 1)] == board[(0, 2)] and board[(0, 0)] ! = ' '
-    second_column = board[(1, 0)] == board[(1, 1)] and board[(1, 1)] == board[(1, 2)] and board[(1, 0)] ! = ' '
-    third_column = board[(2, 0)] == board[(2, 1)] and board[(2, 1)] == board[(2, 2)] and board[(2, 0)] ! = ' '
+    first_column = board[(0, 0)] == board[(0, 1)] and board[(0, 1)] == board[(0, 2)] and board[(0, 0)] != ' '
+    second_column = board[(1, 0)] == board[(1, 1)] and board[(1, 1)] == board[(1, 2)] and board[(1, 0)] != ' '
+    third_column = board[(2, 0)] == board[(2, 1)] and board[(2, 1)] == board[(2, 2)] and board[(2, 0)] != ' '
     if first_column or second_column or third_column:
         return True
     else:
@@ -10,11 +10,11 @@ def vertical_check(board):
 
 def horizontal_check(board):
     # TODO:
-    if (board[(0, 0)] == board[(1, 0)] and  board[(1, 0)] == board[(2, 0)] and board[(0, 0)] ! = ' '):
+    if (board[(0, 0)] == board[(1, 0)] and  board[(1, 0)] == board[(2, 0)] and board[(0, 0)] != ' '):
         return True
-    elif (board[(0, 1)] == board[(1, 1)] and  board[(1, 1)] == board[(2, 1)] and board[(0, 1)] ! = ' '):
+    elif (board[(0, 1)] == board[(1, 1)] and  board[(1, 1)] == board[(2, 1)] and board[(0, 1)] != ' '):
         return True
-    elif (board[(0, 2)] == board[(1, 2)] and  board[(1, 2)] == board[(2, 2)] and board[(0, 2)] ! = ' '):
+    elif (board[(0, 2)] == board[(1, 2)] and  board[(1, 2)] == board[(2, 2)] and board[(0, 2)] != ' '):
         return True
     else:
         return False
@@ -23,9 +23,9 @@ def horizontal_check(board):
 def diagonal_check(board):
 
     # TODO:
-    if board[(0, 0)] == board[(1, 1)] and board[(1, 1)] == board[(2, 2)] and board[(0, 0)] ! = ' ':
+    if board[(0, 0)] == board[(1, 1)] and board[(1, 1)] == board[(2, 2)] and board[(0, 0)] != ' ':
         return True
-    elif board[(0, 2)] == board[(1, 1)] and board[(1, 1)] == board[(2, 0)] and board[(0, 2)] ! = ' ':
+    elif board[(0, 2)] == board[(1, 1)] and board[(1, 1)] == board[(2, 0)] and board[(0, 2)] != ' ':
         return True
     else:
         return False
@@ -54,12 +54,12 @@ def game_print(board):
 
 
 def change_player(player):
-    player = 1 - player
+    return 1 - player
 
 def number_to_coord(number):
     if number > 9:
         print("Invalid number")
-        break
+        return
 
     horizontal = (number - 1) % 3
     vertical = (number - 1) // 3
@@ -71,11 +71,7 @@ def play(board, player):
     else:
         player_piece = 'O'
 
-    move = raw_input("Name me your move!")
-
-    while move > 9 or move < 1:
-        print("Wrong input!")
-        move = raw_input("Name me your move!")
+    move = int(input("Name me your move!"))
 
     coord = number_to_coord(move)
 
@@ -98,7 +94,7 @@ def main():
     player = 0
 
     while step < 9:
-        change_player(player)
+        player = change_player(player)
         play(board, player)
         game_print(board)
 
@@ -115,7 +111,7 @@ def main():
             else:
                 print("Lose!")
 
-            another_game = raw_input("Another game? [y/n]")
+            another_game = input("Another game? [y/n]")
             if another_game == "y":
                 main()
             else:
