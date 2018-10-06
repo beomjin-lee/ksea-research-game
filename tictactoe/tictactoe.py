@@ -1,8 +1,8 @@
 def vertical_check(board):
     # TODO:
-    first_column = (board[(0, 0)] and board[(0, 1)] and board[(0, 2)] == 1)
-    second_column = (board[(1, 0)] and board[(1, 1)] and board[(1, 2)] == 1)
-    third_column = (board[(2, 0)] and board[(2, 1)] and board[(2, 2)] == 1)
+    first_column = board[(0, 0)] == board[(0, 1)] and board[(0, 1)] == board[(0, 2)]
+    second_column = board[(1, 0)] == board[(1, 1)] and board[(1, 1)] == board[(1, 2)]
+    third_column = board[(2, 0)] == board[(2, 1)] and board[(2, 1)] == board[(2, 2)]
     if first_column or second_column or third_column:
         return True
     else:
@@ -49,7 +49,7 @@ def change_player(player):
 def number_to_coord(number):
 
 def play(board, player):
-    
+
 
 def main():
     board = {
