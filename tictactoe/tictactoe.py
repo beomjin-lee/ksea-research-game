@@ -52,6 +52,18 @@ def game_print(board):
     print("  " + board[(0, 0)] + "  |  " + board[(1, 0)] + "  |  " + board[(2, 0)] + "  ")
     print("     |     |     ")
 
+def game_init():
+    print("     |     |     ")
+    print("  " + "7" + "  |  " + "8" + "  |  " + "9" + "  ")
+    print("     |     |     ")
+    print("-----|-----|-----")
+    print("     |     |     ")
+    print("  " + "4" + "  |  " + "5" + "  |  " + "6" + "  ")
+    print("     |     |     ")
+    print("-----|-----|-----")
+    print("     |     |     ")
+    print("  " + "1" + "  |  " + "2" + "  |  " + "3" + "  ")
+    print("     |     |     ")
 
 def change_player(player):
     return 1 - player
@@ -92,6 +104,8 @@ def main():
 
     step = 0
     player = 0
+
+    game_init()
 
     while step < 9:
         player = change_player(player)

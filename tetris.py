@@ -1,9 +1,10 @@
 class Board:
-    def __init__(self, size):
+    def __init__(self):
         # Put the board implementation here
         # Hashmap? Array? Future of KSEA lies in your hands
         # Eugene
-        self.size = size
+        self.x_size = 10
+        self.y_size = 20
         self.is_piece_set = False # piece moving
 
     def game_over(self):
@@ -19,11 +20,14 @@ class Piece:
         #
 
     def random_piece_gen(self):
-        # 
+        #
 
 
 class Game:
     def __init__(self):
+        self.board = Board()
+        self.piece = Piece()
+        
         self.score = 0
 
     def timer(self):
