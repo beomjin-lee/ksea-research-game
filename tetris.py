@@ -20,55 +20,9 @@ class Piece:
     # Shape names reference: https://tetris.wiki/Tetromino
     def __init__(self):
         #
-        cleared_row_count = 0
-        dimension = [0][0]
-        position = (0, 0)
-
-    class I_shape:
-        dimension = [1][4]
-        position = 
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[0][2] = 1
-        dimension[0][3] = 1
-
-    class O_shape:
-        dimension = [2][2]
-        position = 
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[1][0] = 1
-        dimension[1][1] = 1
-    
-    class T_shape:
-        dimension = [2][3]
-        position = 
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[1][0] = 1
-        dimension[1][1] = 1
-        dimension[1][0] = 1
-        dimension[1][1] = 1
-    
-    class S_shape:
-        dimension = [2][3]
-        position = 
-    
-    class Z_shape:
-        dimension = [2][3]
-        position = 
-    
-    class J_shape:
-        dimension = [2][3]
-        position = 
-    
-    class L_shpae:
-        dimension = [2][3]
-        position = 
-
-    
-
-
+        self.cleared_row_count = 0
+        self.dimension = [0][0]
+        self.position = [0, 0]
 
     def random_piece_gen(self):
         
@@ -79,6 +33,64 @@ class Piece:
     def change_row(self):
         row_num = row_num - cleared_row_count
 
+    class I_shape(Piece):
+        dimension = [1][4]
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[0][3] = 1
+
+    class O_shape(Piece):
+        dimension = [2][2]
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[1][0] = 1
+        dimension[1][1] = 1
+    
+    class T_shape(Piece):
+        dimension = [2][3]
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 0
+        dimension[1][1] = 1
+        dimension[1][2] = 0
+    
+    class S_shape(Piece):
+        dimension = [2][3]
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 0
+        dimension[1][0] = 0
+        dimension[1][1] = 1
+        dimension[1][2] = 1
+
+    class Z_shape(Piece):
+        dimension = [2][3]
+        dimension[0][0] = 0 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 1
+        dimension[1][1] = 1
+        dimension[1][2] = 0
+    
+    class J_shape(Piece):
+        dimension = [2][3]
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 1
+        dimension[1][1] = 0
+        dimension[1][2] = 0
+    
+    class L_shpae(Piece):
+        dimension = [2][3]
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 0
+        dimension[1][1] = 0
+        dimension[1][2] = 1
 
 
 class Game:
