@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Board:
     def __init__(self):
         # Put the board implementation here
@@ -8,12 +11,11 @@ class Board:
         self.is_piece_set = False # piece moving
 
     def game_over(self):
-        # Brian L.
+
 
     def change_is_piece_set(self):
         # Wonwoo
  
-
 
 class Piece:
     def __init__(self):
