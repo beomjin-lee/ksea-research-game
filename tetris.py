@@ -11,7 +11,7 @@ class Board:
         self.board = {}
 
         for i in range(y_size):
-            board[i] = [0] * y_size
+            board[i] = [0] * x_size
 
     def add_pieces(self):
         assert self is instance(self, Piece)
