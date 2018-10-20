@@ -12,7 +12,7 @@ class Board:
 
     def change_is_piece_set(self):
         # Wonwoo
-
+ 
 
 
 class Piece:
