@@ -33,65 +33,64 @@ class Piece:
     def change_row(self):
         row_num = row_num - cleared_row_count
 
-    class I_shape(Piece):
-        dimension = [1][4]
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[0][2] = 1
-        dimension[0][3] = 1
+class I_shape(Piece):
+    dimension = [1][4]
+    dimension[0][0] = 1 
+    dimension[0][1] = 1
+    dimension[0][2] = 1
+    dimension[0][3] = 1
 
-    class O_shape(Piece):
-        dimension = [2][2]
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[1][0] = 1
-        dimension[1][1] = 1
-    
-    class T_shape(Piece):
-        dimension = [2][3]
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[0][2] = 1
-        dimension[1][0] = 0
-        dimension[1][1] = 1
-        dimension[1][2] = 0
-    
-    class S_shape(Piece):
-        dimension = [2][3]
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[0][2] = 0
-        dimension[1][0] = 0
-        dimension[1][1] = 1
-        dimension[1][2] = 1
+class O_shape(Piece):
+    dimension = [2][2]
+    dimension[0][0] = 1 
+    dimension[0][1] = 1
+    dimension[1][0] = 1
+    dimension[1][1] = 1
 
-    class Z_shape(Piece):
-        dimension = [2][3]
-        dimension[0][0] = 0 
-        dimension[0][1] = 1
-        dimension[0][2] = 1
-        dimension[1][0] = 1
-        dimension[1][1] = 1
-        dimension[1][2] = 0
-    
-    class J_shape(Piece):
-        dimension = [2][3]
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[0][2] = 1
-        dimension[1][0] = 1
-        dimension[1][1] = 0
-        dimension[1][2] = 0
-    
-    class L_shpae(Piece):
-        dimension = [2][3]
-        dimension[0][0] = 1 
-        dimension[0][1] = 1
-        dimension[0][2] = 1
-        dimension[1][0] = 0
-        dimension[1][1] = 0
-        dimension[1][2] = 1
+class T_shape(Piece):
+    dimension = [2][3]
+    dimension[0][0] = 1 
+    dimension[0][1] = 1
+    dimension[0][2] = 1
+    dimension[1][0] = 0
+    dimension[1][1] = 1
+    dimension[1][2] = 0
 
+class S_shape(Piece):
+    dimension = [2][3]
+    dimension[0][0] = 1 
+    dimension[0][1] = 1
+    dimension[0][2] = 0
+    dimension[1][0] = 0
+    dimension[1][1] = 1
+    dimension[1][2] = 1
+
+class Z_shape(Piece):
+    dimension = [2][3]
+    dimension[0][0] = 0 
+    dimension[0][1] = 1
+    dimension[0][2] = 1
+    dimension[1][0] = 1
+    dimension[1][1] = 1
+    dimension[1][2] = 0
+
+class J_shape(Piece):
+    dimension = [2][3]
+    dimension[0][0] = 1 
+    dimension[0][1] = 1
+    dimension[0][2] = 1
+    dimension[1][0] = 1
+    dimension[1][1] = 0
+    dimension[1][2] = 0
+
+class L_shpae(Piece):
+    dimension = [2][3]
+    dimension[0][0] = 1 
+    dimension[0][1] = 1
+    dimension[0][2] = 1
+    dimension[1][0] = 0
+    dimension[1][1] = 0
+    dimension[1][2] = 1
 
 class Game:
     def __init__(self):
