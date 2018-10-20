@@ -6,12 +6,12 @@ class Board:
         # Hashmap? Array? Future of KSEA lies in your hands
         # Eugene
         self.x_size = 10
-        self.y_size = [0] * y_size
+        self.y_size = 20
         self.is_piece_set = False # piece moving
         self.board = {}
 
         for i in range(y_size):
-            board[i] = np.zeros(x_size)
+            board[i] = [0] * y_size
 
     def add_pieces(self):
         assert self is instance(self, Piece)
