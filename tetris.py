@@ -1,3 +1,5 @@
+import numpy as np
+
 class Board:
     def __init__(self):
         # Put the board implementation here
@@ -9,6 +11,7 @@ class Board:
 
     def game_over(self):
         # Brian L.
+        pass
 
     def change_is_piece_set(self):
         print("Hello")
@@ -21,76 +24,125 @@ class Piece:
     def __init__(self):
         #
         self.cleared_row_count = 0
-        self.dimension = [0][0]
+        self.dimension = np.zeros((0, 0))
         self.position = [0, 0]
 
     def random_piece_gen(self):
-        
+        pass
 
     def rotate_piece(self):
-
+        pass
 
     def change_row(self):
         row_num = row_num - cleared_row_count
 
 class I_shape(Piece):
-    dimension = [1][4]
-    dimension[0][0] = 1 
-    dimension[0][1] = 1
-    dimension[0][2] = 1
-    dimension[0][3] = 1
+    
+
+    def __init__(self):
+        #
+        dimension = np.zeros((1, 4))
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[0][3] = 1
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
 
 class O_shape(Piece):
-    dimension = [2][2]
-    dimension[0][0] = 1 
-    dimension[0][1] = 1
-    dimension[1][0] = 1
-    dimension[1][1] = 1
+    
+
+    def __init__(self):
+        #
+        dimension = np.zeros((2, 2))
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[1][0] = 1
+        dimension[1][1] = 1
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
 
 class T_shape(Piece):
-    dimension = [2][3]
-    dimension[0][0] = 1 
-    dimension[0][1] = 1
-    dimension[0][2] = 1
-    dimension[1][0] = 0
-    dimension[1][1] = 1
-    dimension[1][2] = 0
+    
+
+    def __init__(self):
+        #
+        dimension = np.zeros((2, 3))
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 0
+        dimension[1][1] = 1
+        dimension[1][2] = 0
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
 
 class S_shape(Piece):
-    dimension = [2][3]
-    dimension[0][0] = 1 
-    dimension[0][1] = 1
-    dimension[0][2] = 0
-    dimension[1][0] = 0
-    dimension[1][1] = 1
-    dimension[1][2] = 1
+
+
+    def __init__(self):
+        #
+        dimension = np.zeros((2, 3))
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 0
+        dimension[1][0] = 0
+        dimension[1][1] = 1
+        dimension[1][2] = 1
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
 
 class Z_shape(Piece):
-    dimension = [2][3]
-    dimension[0][0] = 0 
-    dimension[0][1] = 1
-    dimension[0][2] = 1
-    dimension[1][0] = 1
-    dimension[1][1] = 1
-    dimension[1][2] = 0
+    
+
+    def __init__(self):
+        #
+        dimension = np.zeros((2, 3))
+        dimension[0][0] = 0 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 1
+        dimension[1][1] = 1
+        dimension[1][2] = 0
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
 
 class J_shape(Piece):
-    dimension = [2][3]
-    dimension[0][0] = 1 
-    dimension[0][1] = 1
-    dimension[0][2] = 1
-    dimension[1][0] = 1
-    dimension[1][1] = 0
-    dimension[1][2] = 0
+    
 
-class L_shpae(Piece):
-    dimension = [2][3]
-    dimension[0][0] = 1 
-    dimension[0][1] = 1
-    dimension[0][2] = 1
-    dimension[1][0] = 0
-    dimension[1][1] = 0
-    dimension[1][2] = 1
+    def __init__(self):
+        #
+        dimension = np.zeros((2, 3))
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 1
+        dimension[1][1] = 0
+        dimension[1][2] = 0
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
+
+class L_shape(Piece):
+    
+
+    def __init__(self):
+        #
+        dimension = np.zeros((2, 3))
+        dimension[0][0] = 1 
+        dimension[0][1] = 1
+        dimension[0][2] = 1
+        dimension[1][0] = 0
+        dimension[1][1] = 0
+        dimension[1][2] = 1
+        self.cleared_row_count = 0
+        self.dimension = dimension
+        self.position = [0, 0]
 
 class Game:
     def __init__(self):
@@ -101,12 +153,15 @@ class Game:
 
     def timer(self):
         # Henry,
+        pass
 
     def move(self):
         # Henry,
+        pass
 
     def rotate(self):
         # Henry,
+        pass
 
     def score(self):
         # Brian Y.
