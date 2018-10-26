@@ -126,11 +126,14 @@ class Game:
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+		try:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+		except KeyError, e:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 
 		self.new_stone()
 
-	def check_collision(board, shape, offset_x, offset_y):
+	def check_collision(self, board, shape, offset_x, offset_y):
 		"""
 		Check collisions
 		"""
@@ -146,7 +149,10 @@ class Game:
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+		try:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+		except KeyError, e:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 
 		self.piece_x = int(self.board_class.x_size / 2 - len(self.pieces.curr_piece) / 2)
 		self.piece_y = 0
@@ -328,7 +334,7 @@ Press space to continue""")
 						)
 
 					self.draw_matrix(self.pieces.next_piece,
-						(cols + 1, 2)
+						(self.board_class.x_size + 1, 2)
 						)
 
 			pygame.display.update()
