@@ -234,7 +234,7 @@ class Game(object):
 			if check_collision(self.board_class.board,
 			                   self.pieces.curr_piece,
 			                   self.piece_x, self.piece_y):
-				self.board_class.board = join_board(
+				self.board_class.board = self.board_class.join_board(
 				  self.board_class.board,
 				  self.pieces.curr_piece,
 				  (self.piece_x, self.piece_y))
