@@ -99,7 +99,7 @@ class Piece:
 ########
 # GAME #
 ########
-class Game(object):
+class Game:
 	def __init__(self):
 		# Initialize classes
 		self.board_class = Board()
@@ -126,11 +126,14 @@ class Game(object):
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.values())) + 1]
+		try:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+		except KeyError, e:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 
 		self.new_stone()
 
-	def check_collision(board, shape, offset_x, offset_y):
+	def check_collision(self, board, shape, offset_x, offset_y):
 		"""
 		Check collisions
 		"""
@@ -146,12 +149,15 @@ class Game(object):
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.values())) + 1]
+		try:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+		except KeyError, e:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 
 		self.piece_x = int(self.board_class.x_size / 2 - len(self.pieces.curr_piece) / 2)
 		self.piece_y = 0
 
-		if self.check_collision(self.board_class.board, self.pieces.curr_piece, self.piece_x, self.piece_y):
+		if self.check_collision(board=self.board_class.board, shape=self.pieces.curr_piece, offset_x=self.piece_x, offset_y=self.piece_y):
 			self.gameover = True
 
 	def disp_msg(self, msg, topleft):
@@ -328,7 +334,7 @@ Press space to continue""")
 						)
 
 					self.draw_matrix(self.pieces.next_piece,
-						(cols + 1, 2)
+						(self.board_class.x_size + 1, 2)
 						)
 
 			pygame.display.update()
