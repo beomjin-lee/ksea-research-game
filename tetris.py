@@ -1,3 +1,5 @@
+import pygame
+
 class Board:
     def __init__(self):
         # Put the board implementation here
@@ -43,3 +45,10 @@ class Game:
         # Brian Y.
         # Just Tetris scoring please
         self.score = NotImplementedError()
+
+class Timer:
+    def __init__(self):
+        self.clock = pygame.time.Clock()
+
+    def time(self):
+        return self.clock.get_rawtime()
