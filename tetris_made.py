@@ -1,6 +1,7 @@
 from random import randrange as rand
 import pygame
 import sys
+import numpy as np
 
 ######################
 # FRONT END SETTINGS #
@@ -9,15 +10,15 @@ cell_size = 18
 maxfps = 30
 
 colors = [
-(0,   0,   0),
-(220, 0,   20),
-(60,  165, 50),
-(100, 100, 255),
-(255, 90,  0),
-(255, 200, 40),
-(160, 50,  210),
-(70,  230, 210),
-(35,  35,  35)
+	(0,   0,   0),
+	(220, 0,   20),
+	(60,  165, 50),
+	(100, 100, 255),
+	(255, 90,  0),
+	(255, 200, 40),
+	(160, 50,  210),
+	(70,  230, 210),
+	(35,  35,  35)
 ]
 
 #########
@@ -94,6 +95,8 @@ class Piece:
 		Rotate clockwise / right
 		"""
 		# TODO: Complete the function
+		new_shape = np.rot(shape, 90)
+		return new_shape
 
 
 ########
@@ -128,7 +131,7 @@ class Game:
 
 		try:
 			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
-		except KeyError, e:
+		except KeyError:
 			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 
 		self.new_stone()
@@ -151,7 +154,7 @@ class Game:
 		self.pieces.curr_piece = self.pieces.next_piece[:]
 		try:
 			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
-		except KeyError, e:
+		except KeyError:
 			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 
 		self.piece_x = int(self.board_class.x_size / 2 - len(self.pieces.curr_piece) / 2)
