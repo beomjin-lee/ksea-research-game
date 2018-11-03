@@ -37,15 +37,22 @@ class Board:
 		"""
 		Creates new board - dictionary with arrays
 		"""
-		return []
+		board = {}
+		for i in range(self.y_size):
+			board[i] = [0] * self.x_size
+		return board
 		# TODO: Complete function
 
-	def remove_row(self, board, row):
+	def remove_row(self, row):
 		"""
 		Removes row from board
 		"""
 		# TODO: Complete function
-		return []
+		new_board = dict.copy(self.board)
+		for i in range(1, row):
+			new_board[i] = self.board[i - 1]
+		new_board[0] = [0] * self.x_size
+		self.board = new_board
 
 	def join_board(self, mat1, mat2, mat2_off):
 		"""
@@ -99,8 +106,8 @@ class Piece:
 		"""
 		# TODO: Complete the function
 		return [ [ shape[y][x]
-				for y in xrange(len(shape)) ]
-			for x in xrange(len(shape[0]) - 1, -1, -1) ]
+				for y in range(len(shape)) ]
+			for x in range(len(shape[0]) - 1, -1, -1) ]
 
 
 ########
@@ -150,7 +157,7 @@ class Game:
 				try:
 					if cell and board[cy + off_y][cx + off_x]:
 						return True
-				except IndexError:
+				except:
 					return True
 		return False
 
@@ -165,7 +172,7 @@ class Game:
 		self.piece_y = 0
 
 		if self.check_collision(board=self.board_class.board, shape=self.pieces.curr_piece, offset_x=self.piece_x, offset_y=self.piece_y):
-			self.gameover = True
+			self.gameover = False
 
 	def disp_msg(self, msg, topleft):
 		"""
@@ -200,29 +207,36 @@ class Game:
 		Combines the arrays in dictionary for board
 		"""
 		return_matrix=[]
-		for i in range(len(dictionary)):
-			return_matrix.append(dictionary[i])
+		if isinstance(dictionary, dict):
+			for i in range(len(dictionary.keys())):
+				return_matrix.append(dictionary[i])
+			return return_matrix
+		return dictionary
 
-		return return_matrix
-
-	def draw_matrix(self, matrix, offset):
-		off_x, off_y=offset
-		for y, row in enumerate(matrix):
-			for x, val in enumerate(row):
-				if val:
-					pygame.draw.rect(
-						self.screen,
-						colors[val],
-						pygame.Rect(
-							(off_x + x) *
-							  cell_size,
-							(off_y + y) *
-							  cell_size,
-							cell_size,
-							cell_size), 0)
+	def draw_matrix(self, board, offset):
+		off_x, off_y = offset
+		matrix = self.concat_dictionary(board)
+		try:
+			for y, row in enumerate(matrix):
+				for x, val in enumerate(row):
+					if val:
+						pygame.draw.rect(
+							self.screen,
+							colors[val],
+							pygame.Rect(
+								(off_x + x) *
+								  cell_size,
+								(off_y + y) *
+								  cell_size,
+								cell_size,
+								cell_size), 0)
+		except:
+			print("I'm erroring out!")
+			print('matrix', matrix)
+			print('board', board)
 
 	def move(self, delta_x):
-		print("I'm moving!")
+		# print("I'm moving!")
 		if not self.gameover and not self.paused:
 			new_x=self.piece_x + delta_x
 			if new_x < 0:
@@ -254,15 +268,18 @@ class Game:
 				  (self.piece_x, self.piece_y))
 				self.new_stone()
 				cleared_rows = 0
-				while True:
-					for i, row in enumerate(self.board_class.board[:-1]):
+				# while True:
+				matrix = self.concat_dictionary(self.board_class.board)
+				try:
+					for i, row in enumerate(matrix[:-1]):
 						if 0 not in row:
-							self.board_class.board = remove_row(
-							  self.board_class.board, i)
+							self.board_class.remove_row(i)
 							cleared_rows += 1
 							break
-					else:
-						break
+					# else:
+					# 	break
+				except:
+					print(matrix, self.board_class.board)
 				self.add_cl_lines(cleared_rows)
 				return True
 		return False
@@ -270,10 +287,10 @@ class Game:
 	def rotate_piece_with_constraints(self):
 		if not self.gameover and not self.paused:
 			self.pieces.curr_piece = self.pieces.rotate_right(self.pieces.curr_piece)
-			if not self.check_collision(self.board_class.board,
-			                       self.pieces.curr_piece,
-			                       self.piece_x, self.piece_y):
-				self.pieces.curr_piece = new_piece
+			# if not self.check_collision(self.board_class.board,
+			#                        self.pieces.curr_piece,
+			#                        self.piece_x, self.piece_y):
+				# self.pieces.curr_piece = new_piece
 
 	def toggle_pause(self):
 		self.paused = not self.paused
@@ -355,7 +372,7 @@ Press space to continue""")
 						+key):
 							self.drop()
 							key_actions[key]()
-
+			# print(self.board_class.board)
 			clock.tick(maxfps)
 
 ########
