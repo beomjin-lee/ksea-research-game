@@ -52,9 +52,12 @@ class Board:
 		Join two board together
 		"""
 		off_x, off_y = mat2_off
-		for cy, row in enumerate(mat2):
-			for cx, val in enumerate(row):
-				mat1[cy + off_y - 1][cx + off_x] += val
+		try:
+			for cy, row in enumerate(mat2):
+				for cx, val in enumerate(row):
+					mat1[cy + off_y - 1][cx + off_x] += val
+		except:
+			pass
 		return mat1
 
 #########
@@ -90,13 +93,14 @@ class Piece:
 
 		self.next_piece = self.tetris_shapes[1]
 
-	def rotate_right(shape):
+	def rotate_right(self, shape):
 		"""
 		Rotate clockwise / right
 		"""
 		# TODO: Complete the function
-		new_shape = np.rot(shape, 90)
-		return new_shape
+		return [ [ shape[y][x]
+				for y in xrange(len(shape)) ]
+			for x in xrange(len(shape[0]) - 1, -1, -1) ]
 
 
 ########
@@ -132,7 +136,7 @@ class Game:
 		try:
 			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 		except KeyError:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.new_stone()
 
@@ -155,7 +159,7 @@ class Game:
 		try:
 			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
 		except KeyError:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.piece_x = int(self.board_class.x_size / 2 - len(self.pieces.curr_piece) / 2)
 		self.piece_y = 0
@@ -196,8 +200,8 @@ class Game:
 		Combines the arrays in dictionary for board
 		"""
 		return_matrix=[]
-		for arr in dictionary.values():
-			return_matrix.append(arr)
+		for i in range(len(dictionary)):
+			return_matrix.append(dictionary[i])
 
 		return return_matrix
 
@@ -218,13 +222,14 @@ class Game:
 							cell_size), 0)
 
 	def move(self, delta_x):
+		print("I'm moving!")
 		if not self.gameover and not self.paused:
 			new_x=self.piece_x + delta_x
 			if new_x < 0:
-				new_x=0
-			if new_x > cols - len(self.pieces.curr_piece[0]):
-				new_x=cols - len(self.pieces.curr_piece[0])
-			if not check_collision(self.board_class.board,
+				new_x = 0
+			if new_x > self.board_class.y_size - len(self.pieces.curr_piece[0]):
+				new_x = self.board_class.y_size - len(self.pieces.curr_piece[0])
+			if not self.check_collision(self.board_class.board,
 			                       self.pieces.curr_piece,
 			                       new_x, self.piece_y):
 				self.piece_x = new_x
@@ -234,13 +239,13 @@ class Game:
 		pygame.display.update()
 		sys.exit()
 
-	def drop(self, manual):
+	def drop(self):
 		if not self.gameover and not self.paused:
 			self.piece_y += 1
 
-			board_arr = concat_dictionary(self.board_class.board)
+			board_arr = self.concat_dictionary(self.board_class.board)
 
-			if check_collision(self.board_class.board,
+			if self.check_collision(self.board_class.board,
 			                   self.pieces.curr_piece,
 			                   self.piece_x, self.piece_y):
 				self.board_class.board = self.board_class.join_board(
@@ -264,9 +269,9 @@ class Game:
 
 	def rotate_piece_with_constraints(self):
 		if not self.gameover and not self.paused:
-			new_piece = self.pieces.rotate_right(self.pieces.curr_piece)
-			if not check_collision(self.board_class.board,
-			                       new_stone,
+			self.pieces.curr_piece = self.pieces.rotate_right(self.pieces.curr_piece)
+			if not self.check_collision(self.board_class.board,
+			                       self.pieces.curr_piece,
 			                       self.piece_x, self.piece_y):
 				self.pieces.curr_piece = new_piece
 
@@ -275,7 +280,6 @@ class Game:
 
 	def start_game(self):
 		if self.gameover:
-			self.init_game()
 			self.gameover = False
 
 	def add_cl_lines(self, n):
@@ -290,7 +294,7 @@ class Game:
 			'ESCAPE':	self.quit,
 			'LEFT':		lambda:self.move(-1),
 			'RIGHT':	lambda:self.move(1),
-			'DOWN':		lambda:self.drop(True),
+			'DOWN':		lambda:self.drop(),
 			'UP':		self.rotate_piece_with_constraints,
 			'p':		self.toggle_pause,
 			'SPACE':	self.start_game,
@@ -349,6 +353,7 @@ Press space to continue""")
 					for key in key_actions:
 						if event.key == eval("pygame.K_"
 						+key):
+							self.drop()
 							key_actions[key]()
 
 			clock.tick(maxfps)
