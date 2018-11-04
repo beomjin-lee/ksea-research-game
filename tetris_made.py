@@ -6,8 +6,8 @@ import numpy as np
 ######################
 # FRONT END SETTINGS #
 ######################
-cell_size = 18
-maxfps = 30
+cell_size = 30
+maxfps = 6
 
 colors = [
 	(0,   0,   0),
@@ -30,7 +30,7 @@ class Board:
 	def __init__(self, x_size=10, y_size=20):
 		self.x_size = x_size
 		self.y_size = y_size
-		self.is_piece_set = False  # piece moving
+		# self.is_piece_set = False  # piece moving
 		self.board = self.new_board()
 
 	def new_board(self):
@@ -49,7 +49,7 @@ class Board:
 		"""
 		# TODO: Complete function
 		new_board = dict.copy(self.board)
-		for i in range(1, row):
+		for i in range(1, row + 1):
 			new_board[i] = self.board[i - 1]
 		new_board[0] = [0] * self.x_size
 		self.board = new_board
@@ -58,14 +58,35 @@ class Board:
 		"""
 		Join two board together
 		"""
+		matrix = self.concat_dictionary(mat1)
 		off_x, off_y = mat2_off
 		try:
 			for cy, row in enumerate(mat2):
 				for cx, val in enumerate(row):
-					mat1[cy + off_y - 1][cx + off_x] += val
+					new_val = (matrix[cy + off_y - 1][cx + off_x] + val) % 8
+					matrix[cy + off_y - 1][cx + off_x] = new_val
 		except:
 			pass
-		return mat1
+
+		unconcat_dict = self.unconcat_dict(matrix)
+		return unconcat_dict
+
+	def concat_dictionary(self, dictionary):
+		"""
+		Combines the arrays in dictionary for board
+		"""
+		return_matrix=[]
+		if isinstance(dictionary, dict):
+			for i in range(len(dictionary.keys())):
+				return_matrix.append(dictionary[i])
+			return return_matrix
+		return dictionary
+
+	def unconcat_dict(self, arr):
+		uncocat_dictionary = {}
+		for i in range(len(arr)):
+			uncocat_dictionary[i] = arr[i]
+		return uncocat_dictionary
 
 #########
 # PIECE #
@@ -105,9 +126,8 @@ class Piece:
 		Rotate clockwise / right
 		"""
 		# TODO: Complete the function
-		return [ [ shape[y][x]
-				for y in range(len(shape)) ]
-			for x in range(len(shape[0]) - 1, -1, -1) ]
+		rot_shape = np.rot90(shape)
+		return rot_shape.tolist()
 
 
 ########
@@ -140,10 +160,8 @@ class Game:
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
-		try:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
-		except KeyError:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 
 		self.new_stone()
 
@@ -151,28 +169,29 @@ class Game:
 		"""
 		Check collisions
 		"""
-		off_x, off_y = offset_x, offset_y
+		matrix = self.concat_dictionary(board)
+
+
 		for cy, row in enumerate(shape):
 			for cx, cell in enumerate(row):
 				try:
-					if cell and board[cy + off_y][cx + off_x]:
-						return True
+					if cell and matrix[cy + offset_y][cx + offset_x]:
+						return 1
 				except:
-					return True
-		return False
+					# print('going into left wall')
+					return 2
+		return 0
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		try:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys()))]
-		except KeyError:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
-		self.piece_x = int(self.board_class.x_size / 2 - len(self.pieces.curr_piece) / 2)
+		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
 
-		if self.check_collision(board=self.board_class.board, shape=self.pieces.curr_piece, offset_x=self.piece_x, offset_y=self.piece_y):
-			self.gameover = False
+		# if self.check_collision(board=self.board_class.board, shape=self.pieces.curr_piece, offset_x=self.piece_x, offset_y=self.piece_y):
+		# 	self.gameover = False
 
 	def disp_msg(self, msg, topleft):
 		"""
@@ -238,11 +257,11 @@ class Game:
 	def move(self, delta_x):
 		# print("I'm moving!")
 		if not self.gameover and not self.paused:
-			new_x=self.piece_x + delta_x
+			new_x = self.piece_x + delta_x
 			if new_x < 0:
 				new_x = 0
-			if new_x > self.board_class.y_size - len(self.pieces.curr_piece[0]):
-				new_x = self.board_class.y_size - len(self.pieces.curr_piece[0])
+			if new_x > self.board_class.x_size - len(self.pieces.curr_piece[0]):
+				new_x = self.board_class.x_size - len(self.pieces.curr_piece[0])
 			if not self.check_collision(self.board_class.board,
 			                       self.pieces.curr_piece,
 			                       new_x, self.piece_y):
@@ -254,6 +273,10 @@ class Game:
 		sys.exit()
 
 	def drop(self):
+		# print('new row \n')
+		# for row in self.board_class.board.keys():
+		# 	print(self.board_class.board[row])
+		# print(self.board_class.board)	
 		if not self.gameover and not self.paused:
 			self.piece_y += 1
 
@@ -271,11 +294,10 @@ class Game:
 				# while True:
 				matrix = self.concat_dictionary(self.board_class.board)
 				try:
-					for i, row in enumerate(matrix[:-1]):
+					for i, row in enumerate(matrix):
 						if 0 not in row:
 							self.board_class.remove_row(i)
 							cleared_rows += 1
-							break
 					# else:
 					# 	break
 				except:
@@ -286,11 +308,24 @@ class Game:
 
 	def rotate_piece_with_constraints(self):
 		if not self.gameover and not self.paused:
-			self.pieces.curr_piece = self.pieces.rotate_right(self.pieces.curr_piece)
-			# if not self.check_collision(self.board_class.board,
-			#                        self.pieces.curr_piece,
-			#                        self.piece_x, self.piece_y):
-				# self.pieces.curr_piece = new_piece
+			new_piece = self.pieces.rotate_right(self.pieces.curr_piece)
+			col_val = self.check_collision(self.board_class.board,
+			                       new_piece,
+			                       self.piece_x, self.piece_y)
+			if not col_val:
+				self.pieces.curr_piece = new_piece
+			elif col_val == 1: # not index error
+				pass
+			else:
+				print(new_piece)
+
+
+
+	def game_over(self):
+		top_row = self.board_class.board[0]
+		for val in top_row: 
+			if val != 0: 
+				self.gameover = True
 
 	def toggle_pause(self):
 		self.paused = not self.paused
@@ -309,9 +344,9 @@ class Game:
 	def run(self):
 		key_actions = {
 			'ESCAPE':	self.quit,
-			'LEFT':		lambda:self.move(-1),
-			'RIGHT':	lambda:self.move(1),
-			'DOWN':		lambda:self.drop(),
+			'LEFT':		lambda: self.move(-1),
+			'RIGHT':	lambda: self.move(1),
+			'DOWN':		lambda: self.drop(),
 			'UP':		self.rotate_piece_with_constraints,
 			'p':		self.toggle_pause,
 			'SPACE':	self.start_game,
@@ -362,16 +397,15 @@ Press space to continue""")
 						)
 
 			pygame.display.update()
-
+			self.game_over()
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.quit()
 				elif event.type == pygame.KEYDOWN:
 					for key in key_actions:
-						if event.key == eval("pygame.K_"
-						+key):
-							self.drop()
+						if event.key == eval("pygame.K_" + key):
 							key_actions[key]()
+			self.drop()	
 			# print(self.board_class.board)
 			clock.tick(maxfps)
 
