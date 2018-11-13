@@ -2,12 +2,13 @@ from random import randrange as rand
 import pygame
 import sys
 import numpy as np
+import copy
 
 ######################
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 6
+maxfps = 1
 
 colors = [
 	(0,   0,   0),
@@ -179,8 +180,8 @@ class Game:
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[7]
 
 		self.new_stone()
 
@@ -202,8 +203,8 @@ class Game:
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
@@ -343,7 +344,7 @@ class Game:
 		                   piece_x, piece_y):
 			piece_y += 1
 
-		return self.board_class.join_board(board, piece, (piece_x, piece_y - 1))
+		return self.board_class.join_board(board, piece, (piece_x, piece_y))
 
 	def game_over(self):
 		top_row = self.board_class.board[0]
@@ -422,6 +423,8 @@ Press space to continue""")
 
 			pygame.display.update()
 			self.game_over()
+			for i in self.game_states():
+				print(i)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.quit()
@@ -502,7 +505,7 @@ Press space to continue""")
 		- Consider all possible places to put the pieces (loop)
 		"""
 		curr_piece_copy = self.pieces.curr_piece[:]
-		num_rotations = self.pieces.tetris_rotation[self.pieces.return_curr_piece_key]
+		num_rotations = self.pieces.tetris_rotation[self.pieces.return_curr_piece_key()]
 		list_rotations = []
 		game_state_list = []
 		for _ in range(num_rotations):
@@ -510,13 +513,76 @@ Press space to continue""")
 			curr_piece_copy = self.pieces.rotate_right(curr_piece_copy)
 		for rotation in list_rotations:
 			for i in range(self.pieces.num_places(rotation)):
-				board_copy = self.board_class.board.copy()
+				board_copy = copy.deepcopy(self.board_class.board)
 				game_state = self.drop_ai(board_copy, rotation, i, 0)
 				game_state_list.append(game_state)
 		return game_state_list
+
+	def run_ai(self):
+		clock = pygame.time.Clock()
+		self.gameover = False
+		self.paused = False
+		while True:
+			self.screen.fill((0,0,0))
+			if self.gameover:
+				self.center_msg("""Game Over!
+	Press space to continue""")
+			else:
+				if self.paused:
+					self.center_msg("Paused")
+				else:
+					pygame.draw.line(
+						self.screen,
+						(255,255,255),
+						(self.rlim + 1, 0),
+						(self.rlim + 1, self.height - 1)
+						)
+
+					self.disp_msg("Next:", (
+							self.rlim + cell_size,
+							2)
+						)
+
+					self.disp_msg(
+						str(self.score),
+						(self.rlim + cell_size, cell_size * 5)
+						)
+
+					self.draw_matrix(self.bground_grid, (0,0))
+
+					self.draw_matrix(self.board_class.board, (0,0))
+
+					self.draw_matrix(
+						self.pieces.curr_piece,
+						(self.piece_x, self.piece_y)
+						)
+
+					self.draw_matrix(self.pieces.next_piece,
+						(self.board_class.x_size + 1, 2)
+						)
+			pygame.display.update()
+			self.game_over()
+			iter = 0
+			for elem in self.game_states():
+				print("iter", iter)
+				iter += 1
+				for key, value in elem.items():
+					print(value)
+
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					self.quit()
+				elif event.type == pygame.KEYDOWN:
+					for key in key_actions:
+						if event.key == eval("pygame.K_" + key):
+							key_actions[key]()
+			self.drop()
+			# print(self.board_class.board)
+			clock.tick(maxfps)
+
 ########
 # MAIN #
 ########
 if __name__ == '__main__':
 	game = Game()
-	game.run()
+	game.run_ai()
