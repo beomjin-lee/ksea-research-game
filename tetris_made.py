@@ -181,7 +181,7 @@ class Game:
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
 		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
-		self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		self.pieces.next_piece = self.pieces.tetris_shapes[6]
 
 		self.new_stone()
 
@@ -203,7 +203,7 @@ class Game:
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		self.pieces.next_piece = self.pieces.tetris_shapes[6]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
@@ -423,8 +423,6 @@ Press space to continue""")
 
 			pygame.display.update()
 			self.game_over()
-			for i in self.game_states():
-				print(i)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.quit()
@@ -436,27 +434,27 @@ Press space to continue""")
 			# print(self.board_class.board)
 			clock.tick(maxfps)
 
-	def heights(self):
+	def heights(self, board):
 		"""
 		returns an array of heights / column
 		"""
 		height_array = [0 for _ in range(self.board_class.x_size)]
 		for i in range(self.board_class.y_size):
-			current_row = self.board_class.board[i]
+			current_row = board[i]
 			for j in range(len(current_row)):
 				if current_row[j] != 0:
 					if height_array[j] == 0:
 						height_array[j] += self.board_class.y_size - i
 		return height_array
 
-	def height_std(self):
-		heights = self.heights()
+	def height_std(self, board):
+		heights = self.heights(board)
 		return np.std(heights)
 
-	def gucci_holes_fendi_blocks(self):
+	def gucci_holes_fendi_blocks(self, board):
 		numHoles = 0
 		numBlockages = 0
-		matrix = self.concat_dictionary(self.board_class.board)
+		matrix = self.concat_dictionary(board)
 		for x in range(self.board_class.x_size):
 			holes = 0
 			bloackages = 0
@@ -487,12 +485,12 @@ Press space to continue""")
 
 		return numHoles + numBlockages
 
-	def num_lines_cleared(self):
+	def num_lines_cleared(self, board):
 		"""
 		Returns number of lines cleared
 		"""
 		num_rows = 0
-		for key, value in self.board_class.board:
+		for key, value in board:
 			if 0 not in value:
 				num_rows += 1
 		return num_rows
@@ -517,6 +515,16 @@ Press space to continue""")
 				game_state = self.drop_ai(board_copy, rotation, i, 0)
 				game_state_list.append(game_state)
 		return game_state_list
+
+	def evaluate(self, board, weights):
+		std_height_feature = self.height_std(board)
+		gucci_feature = self.gucci_holes_fendi_blocks(board)
+		cleared_rows_feature = self.num_lines_cleared(board)
+		# print(std_height_feature, gucci_feature, cleared_rows_feature)
+		utility = 0
+		for weight, feature in zip(weights, [std_height_feature, gucci_feature, cleared_rows_feature]):
+			utility += weight * feature
+		return utility
 
 	def run_ai(self):
 		clock = pygame.time.Clock()
@@ -568,6 +576,7 @@ Press space to continue""")
 				iter += 1
 				for key, value in elem.items():
 					print(value)
+				print(self.evaluate(elem, [0, 0, 0]))
 
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -579,6 +588,7 @@ Press space to continue""")
 			self.drop()
 			# print(self.board_class.board)
 			clock.tick(maxfps)
+
 
 ########
 # MAIN #
