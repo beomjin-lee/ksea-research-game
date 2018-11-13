@@ -460,6 +460,15 @@ Press space to continue""")
 
 		return numHoles + numBlockages
 
+	def num_lines_cleared(self):
+		"""
+		Returns number of lines cleared
+		"""
+		num_rows = 0
+		for key, value in self.board_class.board:
+			if 0 not in value:
+				num_rows += 1
+		return num_rows
 ########
 # MAIN #
 ########
