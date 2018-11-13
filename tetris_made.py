@@ -617,7 +617,7 @@ Press space to continue""")
 		score = -float('inf')
 		keys = []
 		for key, value in game_states_dictionary.items():
-			score_holder[key] = self.evaluate(value, [-1, -1, 100, 1])
+			score_holder[key] = self.evaluate(value, [-1, -1, 10, 1])
 			if score_holder[key] > score:
 				keys = [key]
 				score = score_holder[key]
