@@ -426,7 +426,7 @@ Press space to continue""")
 		return np.std(heights)
 
 
-		def gucci_holes_fendi_blocks(self):
+	def gucci_holes_fendi_blocks(self):
 		numHoles = 0
 		numBlockages = 0
 		matrix = self.concat_dictionary(self.board_class.board)
