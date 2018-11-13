@@ -425,6 +425,39 @@ Press space to continue""")
 		heights = self.heights()
 		return np.std(heights)
 
+		def gucci_holes_fendi_blocks(self):
+		numHoles = 0
+		numBlockages = 0
+		matrix = self.concat_dictionary(self.board_class.board)
+		for x in range(self.board_class.x_size):
+			holes = 0
+			bloackages = 0
+			firstblock_y = 0
+			isblock = False
+			while isblock == False and firstblock_y < self.board_class.y_size:
+				print(x, firstblock_y)
+				if matrix[firstblock_y][x] != 0:
+					isblock = True
+				firstblock_y += 1
+
+			if firstblock_y == self.board_class.y_size - 1:
+				continue
+
+			y = self.board_class.y_size - 1
+			
+			while y <= firstblock_y:
+				if matrix[y][x] > 0 and holes > 0:
+					bloackages += 1
+				elif matrix[y][x] == 0:
+					holes += 1
+
+			if holes == 0:
+				continue
+
+			numHoles += holes
+			numBlockages += blockages
+
+		return numHoles + numBlockages
 
 
 ########
