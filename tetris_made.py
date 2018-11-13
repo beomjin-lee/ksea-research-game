@@ -3,6 +3,7 @@ import pygame
 import sys
 import numpy as np
 import copy
+import random
 
 ######################
 # FRONT END SETTINGS #
@@ -180,8 +181,8 @@ class Game:
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
-		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
-		self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 
 		self.new_stone()
 
@@ -203,8 +204,8 @@ class Game:
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		self.pieces.next_piece = self.pieces.tetris_shapes[7]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
@@ -449,6 +450,7 @@ Press space to continue""")
 
 	def height_std(self, board):
 		heights = self.heights(board)
+		print(max(heights))
 		return max(heights)
 
 
@@ -532,6 +534,7 @@ Press space to continue""")
 		clock = pygame.time.Clock()
 		self.gameover = False
 		self.paused = False
+		curr = self.pieces.curr_piece
 		while True:
 			self.screen.fill((0,0,0))
 			if self.gameover:
@@ -573,7 +576,9 @@ Press space to continue""")
 			pygame.display.update()
 			self.game_over()
 
-			self.move_best()
+			if curr != self.pieces.curr_piece:
+				self.move_best()
+			curr = self.pieces.curr_piece
 
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -589,9 +594,20 @@ Press space to continue""")
 	def find_best(self):
 		score_holder = {}
 		game_states_dictionary = self.game_states()
+		score = -float('inf')
+		keys = []
 		for key, value in game_states_dictionary.items():
 			score_holder[key] = self.evaluate(value, [-1, 0, 0])
-		return max(score_holder, key=lambda k: score_holder[k])
+			if score_holder[key] > score:
+				keys = [key]
+				score = score_holder[key]
+			elif score_holder[key] == score:
+				keys.append(key)
+		# score = max(score_holder, key=lambda k: score_holder[k])
+		# for k in score_holder.keys():
+		# 	if score_holder[k] == score:
+		# 		keys.append(k)
+		return random.choice(keys)
 
 	def move_best(self):
 		num_rotations, num_moves = self.find_best()
