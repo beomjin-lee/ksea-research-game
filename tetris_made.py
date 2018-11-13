@@ -573,7 +573,7 @@ Press space to continue""")
 			self.game_over()
 			iter = 0
 			for elem in self.game_states():
-				print("iter", iter)
+				print("iter:", iter)
 				iter += 1
 				for key, value in elem.items():
 					print(value)
