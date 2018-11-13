@@ -8,7 +8,7 @@ import copy
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 2.5
+maxfps = 10
 
 colors = [
 	(0,   0,   0),
@@ -181,7 +181,7 @@ class Game:
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
 		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
-		self.pieces.next_piece = self.pieces.tetris_shapes[1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[7]
 
 		self.new_stone()
 
@@ -203,7 +203,7 @@ class Game:
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		self.pieces.next_piece = self.pieces.tetris_shapes[1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
@@ -449,7 +449,8 @@ Press space to continue""")
 
 	def height_std(self, board):
 		heights = self.heights(board)
-		return np.std(heights)
+		return max(heights)
+
 
 	def holes_blockages(self, board):
 		numHoles = 0
@@ -504,19 +505,19 @@ Press space to continue""")
 		- Consider all possible rotations of the pieces (loop)
 		- Consider all possible places to put the pieces (loop)
 		"""
+		game_state_dictionary = {}
 		curr_piece_copy = self.pieces.curr_piece[:]
 		num_rotations = self.pieces.tetris_rotation[self.pieces.return_curr_piece_key()]
 		list_rotations = []
-		game_state_list = []
 		for _ in range(num_rotations):
 			list_rotations.append(curr_piece_copy)
 			curr_piece_copy = self.pieces.rotate_right(curr_piece_copy)
-		for rotation in list_rotations:
-			for i in range(self.pieces.num_places(rotation)):
+		for j in range(len(list_rotations)):
+			for i in range(self.pieces.num_places(list_rotations[j])):
 				board_copy = copy.deepcopy(self.board_class.board)
-				game_state = self.drop_ai(board_copy, rotation, i, 0)
-				game_state_list.append(game_state)
-		return game_state_list
+				game_state = self.drop_ai(board_copy, list_rotations[j], i, 0)
+				game_state_dictionary[(j, i - 4)] = game_state
+		return game_state_dictionary
 
 	def evaluate(self, board, weights):
 		std_height_feature = self.height_std(board)
@@ -571,13 +572,8 @@ Press space to continue""")
 						)
 			pygame.display.update()
 			self.game_over()
-			iter = 0
-			for elem in self.game_states():
-				print("iter:", iter)
-				iter += 1
-				for key, value in elem.items():
-					print(value)
-				print(self.evaluate(elem, [1, 1, 1]))
+
+			self.move_best()
 
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -589,6 +585,20 @@ Press space to continue""")
 			self.drop()
 			# print(self.board_class.board)
 			clock.tick(maxfps)
+
+	def find_best(self):
+		score_holder = {}
+		game_states_dictionary = self.game_states()
+		for key, value in game_states_dictionary.items():
+			score_holder[key] = self.evaluate(value, [-1, 0, 0])
+		return max(score_holder, key=lambda k: score_holder[k])
+
+	def move_best(self):
+		num_rotations, num_moves = self.find_best()
+		for _ in range(num_rotations):
+			self.rotate_piece_with_constraints()
+			# self.pieces.curr_piece = self.pieces.rotate_right(self.pieces.curr_piece)
+		self.move(num_moves)
 
 
 ########
