@@ -425,8 +425,6 @@ Press space to continue""")
 		heights = self.heights()
 		return np.std(heights)
 
-
-
 ########
 # MAIN #
 ########
