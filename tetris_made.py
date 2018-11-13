@@ -8,7 +8,7 @@ import copy
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 1
+maxfps = 2.5
 
 colors = [
 	(0,   0,   0),
@@ -181,7 +181,7 @@ class Game:
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 
 		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
-		self.pieces.next_piece = self.pieces.tetris_shapes[6]
+		self.pieces.next_piece = self.pieces.tetris_shapes[1]
 
 		self.new_stone()
 
@@ -203,7 +203,7 @@ class Game:
 
 	def new_stone(self):
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		self.pieces.next_piece = self.pieces.tetris_shapes[6]
+		self.pieces.next_piece = self.pieces.tetris_shapes[1]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
@@ -451,17 +451,17 @@ Press space to continue""")
 		heights = self.heights(board)
 		return np.std(heights)
 
-	def gucci_holes_fendi_blocks(self, board):
+	def holes_blockages(self, board):
 		numHoles = 0
 		numBlockages = 0
 		matrix = self.concat_dictionary(board)
 		for x in range(self.board_class.x_size):
 			holes = 0
-			bloackages = 0
+			blockages = 0
 			firstblock_y = 0
 			isblock = False
-			while isblock == False and firstblock_y < self.board_class.y_size:
-				print(x, firstblock_y)
+			while not isblock and firstblock_y < self.board_class.y_size:
+				# print(x, firstblock_y) #THIS WAS THE ISSUE
 				if matrix[firstblock_y][x] != 0:
 					isblock = True
 				firstblock_y += 1
@@ -471,11 +471,13 @@ Press space to continue""")
 
 			y = self.board_class.y_size - 1
 
-			while y <= firstblock_y:
+			while y >= firstblock_y:
+				# print(y)
 				if matrix[y][x] > 0 and holes > 0:
-					bloackages += 1
+					blockages += 1
 				elif matrix[y][x] == 0:
 					holes += 1
+				y -= 1
 
 			if holes == 0:
 				continue
@@ -490,7 +492,7 @@ Press space to continue""")
 		Returns number of lines cleared
 		"""
 		num_rows = 0
-		for key, value in board:
+		for key, value in board.items():
 			if 0 not in value:
 				num_rows += 1
 		return num_rows
@@ -518,11 +520,10 @@ Press space to continue""")
 
 	def evaluate(self, board, weights):
 		std_height_feature = self.height_std(board)
-		gucci_feature = self.gucci_holes_fendi_blocks(board)
+		holes_blockages_feature = self.holes_blockages(board)
 		cleared_rows_feature = self.num_lines_cleared(board)
-		# print(std_height_feature, gucci_feature, cleared_rows_feature)
 		utility = 0
-		for weight, feature in zip(weights, [std_height_feature, gucci_feature, cleared_rows_feature]):
+		for weight, feature in zip(weights, [std_height_feature, holes_blockages_feature, cleared_rows_feature]):
 			utility += weight * feature
 		return utility
 
@@ -576,7 +577,7 @@ Press space to continue""")
 				iter += 1
 				for key, value in elem.items():
 					print(value)
-				print(self.evaluate(elem, [0, 0, 0]))
+				print(self.evaluate(elem, [1, 1, 1]))
 
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
