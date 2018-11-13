@@ -171,7 +171,6 @@ class Game:
 		"""
 		matrix = self.concat_dictionary(board)
 
-
 		for cy, row in enumerate(shape):
 			for cx, cell in enumerate(row):
 				try:
@@ -276,7 +275,7 @@ class Game:
 		# print('new row \n')
 		# for row in self.board_class.board.keys():
 		# 	print(self.board_class.board[row])
-		# print(self.board_class.board)	
+		# print(self.board_class.board)
 		if not self.gameover and not self.paused:
 			self.piece_y += 1
 
@@ -323,8 +322,8 @@ class Game:
 
 	def game_over(self):
 		top_row = self.board_class.board[0]
-		for val in top_row: 
-			if val != 0: 
+		for val in top_row:
+			if val != 0:
 				self.gameover = True
 
 	def toggle_pause(self):
@@ -405,9 +404,28 @@ Press space to continue""")
 					for key in key_actions:
 						if event.key == eval("pygame.K_" + key):
 							key_actions[key]()
-			self.drop()	
+			self.drop()
 			# print(self.board_class.board)
 			clock.tick(maxfps)
+
+	def heights(self):
+		"""
+		returns an array of heights / column
+		"""
+		height_array = [0 for _ in range(self.board_class.x_size)]
+		for i in range(self.board_class.y_size):
+			current_row = self.board_class.board[i]
+			for j in range(len(current_row)):
+				if current_row[j] != 0:
+					if height_array[j] == 0:
+						height_array[j] += self.board_class.y_size - i
+		return height_array
+
+	def height_std(self):
+		heights = self.heights()
+		return np.std(heights)
+
+
 
 ########
 # MAIN #
