@@ -9,7 +9,7 @@ import random
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 10
+maxfps = 30
 
 colors = [
 	(0,   0,   0),
@@ -469,7 +469,7 @@ Press space to continue""")
 					isblock = True
 				firstblock_y += 1
 
-			if firstblock_y == self.board_class.y_size - 1:
+			if firstblock_y == self.board_class.y_size:
 				continue
 
 			y = self.board_class.y_size - 1
@@ -488,7 +488,8 @@ Press space to continue""")
 			numHoles += holes
 			numBlockages += blockages
 
-		return numHoles + numBlockages
+		# return numHoles + numBlockages
+		return numHoles
 
 	def num_lines_cleared(self, board):
 		"""
@@ -499,6 +500,24 @@ Press space to continue""")
 			if 0 not in value:
 				num_rows += 1
 		return num_rows
+
+	def fullness(self, board):
+		"""
+		Returns the number of empty blocks in each row
+		"""
+		gucci_fullness = []
+		for i in range(self.board_class.y_size):
+			current_row = board[i]
+			if int(sum(current_row)) == 0:
+				continue
+			for j in range(len(current_row)):
+				fendi_fullness = 0
+				if current_row[j] != 0:
+					fendi_fullness += 1
+				gucci_fullness.append(fendi_fullness / 10)
+		return np.mean(gucci_fullness)
+
+
 
 	def game_states(self):
 		"""
@@ -525,8 +544,9 @@ Press space to continue""")
 		std_height_feature = self.height_std(board)
 		holes_blockages_feature = self.holes_blockages(board)
 		cleared_rows_feature = self.num_lines_cleared(board)
+		fullness_feature = self.fullness(board)
 		utility = 0
-		for weight, feature in zip(weights, [std_height_feature, holes_blockages_feature, cleared_rows_feature]):
+		for weight, feature in zip(weights, [std_height_feature, holes_blockages_feature, cleared_rows_feature, fullness_feature]):
 			utility += weight * feature
 		return utility
 
@@ -597,7 +617,7 @@ Press space to continue""")
 		score = -float('inf')
 		keys = []
 		for key, value in game_states_dictionary.items():
-			score_holder[key] = self.evaluate(value, [-1, 0, 0])
+			score_holder[key] = self.evaluate(value, [-1, -1, 100, 1])
 			if score_holder[key] > score:
 				keys = [key]
 				score = score_holder[key]
