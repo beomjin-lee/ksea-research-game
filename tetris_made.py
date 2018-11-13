@@ -117,9 +117,24 @@ class Piece:
 			 [7, 7]]
 		}
 
+		self.tetris_rotation = {
+		1: 4,
+		2: 2,
+		3: 2,
+		4: 4,
+		5: 4,
+		6: 2,
+		7: 1
+		}
+
 		self.curr_piece = self.tetris_shapes[1]
 
 		self.next_piece = self.tetris_shapes[1]
+
+	def return_curr_piece_key(self):
+		for item in self.curr_piece[0]:
+			if item != 0:
+				return item
 
 	def rotate_right(self, shape):
 		"""
@@ -128,6 +143,10 @@ class Piece:
 		# TODO: Complete the function
 		rot_shape = np.rot90(shape)
 		return rot_shape.tolist()
+
+	def num_places(self, shape):
+		length = len(shape[0])
+		return 11 - length # hard coded
 
 
 ########
@@ -318,7 +337,13 @@ class Game:
 			else:
 				print(new_piece)
 
+	def drop_ai(self, board, piece, piece_x, piece_y):
+		while not self.check_collision(board,
+		                   piece,
+		                   piece_x, piece_y):
+			piece_y += 1
 
+		return self.board_class.join_board(board, piece, (piece_x, piece_y - 1))
 
 	def game_over(self):
 		top_row = self.board_class.board[0]
@@ -425,7 +450,6 @@ Press space to continue""")
 		heights = self.heights()
 		return np.std(heights)
 
-
 	def gucci_holes_fendi_blocks(self):
 		numHoles = 0
 		numBlockages = 0
@@ -469,6 +493,27 @@ Press space to continue""")
 			if 0 not in value:
 				num_rows += 1
 		return num_rows
+
+	def game_states(self):
+		"""
+		Returns all the game game states
+
+		- Consider all possible rotations of the pieces (loop)
+		- Consider all possible places to put the pieces (loop)
+		"""
+		curr_piece_copy = self.pieces.curr_piece[:]
+		num_rotations = self.pieces.tetris_rotation[self.pieces.return_curr_piece_key]
+		list_rotations = []
+		game_state_list = []
+		for _ in range(num_rotations):
+			list_rotations.append(curr_piece_copy)
+			curr_piece_copy = self.pieces.rotate_right(curr_piece_copy)
+		for rotation in list_rotations:
+			for i in range(self.pieces.num_places(rotation)):
+				board_copy = self.board_class.board.copy()
+				game_state = self.drop_ai(board_copy, rotation, i, 0)
+				game_state_list.append(game_state)
+		return game_state_list
 ########
 # MAIN #
 ########
