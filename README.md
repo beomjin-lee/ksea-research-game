@@ -1,7 +1,7 @@
 # KSEA - Game AIs
 
 ## Authors
-Beom Jin Lee <beomjin.lee@berkeley.edu>
+Beom Jin Lee < beomjin.lee@berkeley.edu >, 
 
 ## Introduction
 This project is Made by KSEA Project Research and SW Team 2018 at UC Berkeley.
