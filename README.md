@@ -1,7 +1,7 @@
 # KSEA - Game AIs
 
 ## Authors
-Beom Jin Lee < beomjin.lee@berkeley.edu >, 
+Beom Jin Lee < beomjin.lee@berkeley.edu >, Gabi Choi < gabichoi96@gmail.com >, Brian Yoo < brianyoo@berkeley.edu >, Wonwoo Choi < wonwoo9762@berkeley.edu >, Sabin Kim < kbk6881@berkeley.edu >, 
 
 ## Introduction
 This project is Made by KSEA Project Research and SW Team 2018 at UC Berkeley.
@@ -24,3 +24,11 @@ Then, change directories into the cloned by using `cd`, and for tetris, `cd tetr
 
 1. `python tetris_player.py` for playing tetris
 2. `python tetris_ai.py` for tetris AI
+
+The project is still ongoing, and we may incur some significant changes to the programs. If so, please feel free to, instead of attempting to resolve merge conflicts, either re-clone or run:
+
+`git fetch --all`
+
+Followed by:
+
+`git reset --hard origin/master`
