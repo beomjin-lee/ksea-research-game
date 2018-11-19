@@ -3,6 +3,12 @@
 # This file contains tetris game and tetris AI functions
 # AI is built using genetic algorithms
 # Authors: Beom Jin Lee <beomjin.lee@berkeley.edu>,
+# Gabi Choi < gabichoi96@gmail.com >,
+# Brian Yoo < brianyoo@berkeley.edu >,
+# Wonwoo Choi < wonwoo9762@berkeley.edu >,
+# Sabin Kim < kbk6881@berkeley.edu >,
+# Paul Lim < keonwoolim@berkeley.edu >,
+# Hae Young Jang < h_jang@berkeley.edu >
 ##############################################################
 
 from random import randrange as rand
