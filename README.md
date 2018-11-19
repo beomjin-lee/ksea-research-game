@@ -1,7 +1,7 @@
 # KSEA - Game AIs
 
 ## Authors
-Beom Jin Lee < beomjin.lee@berkeley.edu >, Gabi Choi < gabichoi96@gmail.com >, Brian Yoo < brianyoo@berkeley.edu >, Wonwoo Choi < wonwoo9762@berkeley.edu >, Sabin Kim < kbk6881@berkeley.edu >, 
+Beom Jin Lee < beomjin.lee@berkeley.edu >, Gabi Choi < gabichoi96@gmail.com >, Brian Yoo < brianyoo@berkeley.edu >, Wonwoo Choi < wonwoo9762@berkeley.edu >, Sabin Kim < kbk6881@berkeley.edu >, Paul Lim < keonwoolim@berkeley.edu >, 
 
 ## Introduction
 This project is Made by KSEA Project Research and SW Team 2018 at UC Berkeley.
