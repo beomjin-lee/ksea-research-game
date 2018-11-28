@@ -23,7 +23,7 @@ import random
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 100
+maxfps = 50
 
 colors = [
 	(0,   0,   0),
@@ -185,9 +185,7 @@ class Game:
 		self.default_font = pygame.font.Font(pygame.font.get_default_font(), 12)
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
-		# self.pieces.next_piece = self.pieces.tetris_shapes[6]
-		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ np.random.choice(np.arange(1, 8), p=[0.12, 0.12, 0.12, 0.12, 0.12, 0.2, 0.2]) ]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		self.new_stone()
 
@@ -274,7 +272,7 @@ class Game:
 		# Randomly select next piece
 		# self.pieces.next_piece = self.pieces.tetris_shapes[6]
 		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ np.random.choice(np.arange(1, 8), p=[0.12, 0.12, 0.12, 0.12, 0.12, 0.28, 0.12]) ]
 		# Add in constraints for x-position and y-position
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
@@ -585,9 +583,14 @@ Press space to continue""")
 		holes_blockages_feature = self.holes_blockages(board)
 		cleared_rows_feature = self.num_lines_cleared(board)
 		fullness_feature = self.fullness(board)
+		max_height_feature = self.height_max(board)
 		utility = 0
-		for weight, feature in zip(weights, [std_height_feature, holes_blockages_feature, cleared_rows_feature, fullness_feature]):
-			utility += weight * feature
+		# if not all(self.board_class.board[10]):
+		for weight, feature in zip(weights, [std_height_feature, holes_blockages_feature, cleared_rows_feature, fullness_feature, max_height_feature]):
+				utility += weight * feature
+		# else:
+		# 	for weight, feature in zip([-1, -2, 10, 1, -1], [std_height_feature, holes_blockages_feature, cleared_rows_feature, fullness_feature, max_height_feature]):
+		# 		utility += weight * feature
 		return utility
 
 
@@ -602,7 +605,7 @@ Press space to continue""")
 		score = -float('inf')
 		keys = []
 		for key, value in game_states_dictionary.items():
-			score_holder[key] = self.evaluate(value, [-1, -1, 10000, 1])
+			score_holder[key] = self.evaluate(value, [-1, -2, 10000, 1, -1])
 			if score_holder[key] > score:
 				keys = [key]
 				score = score_holder[key]
@@ -651,8 +654,7 @@ Press space to continue""")
 		while True:
 			self.screen.fill((0, 0, 0))
 			if self.gameover:
-				self.center_msg("""Game Over!
-	Press space to continue""")
+				self.center_msg("""Game Over! \n Your score is: {} \n Press space to continue""".format(self.score))
 			else:
 				if self.paused:
 					self.center_msg("Paused")
