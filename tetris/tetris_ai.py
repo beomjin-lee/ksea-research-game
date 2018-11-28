@@ -23,7 +23,7 @@ import random
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 5
+maxfps = 30
 
 colors = [
 	(0,   0,   0),
@@ -185,9 +185,9 @@ class Game:
 		self.default_font = pygame.font.Font(pygame.font.get_default_font(), 12)
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
-		self.pieces.next_piece = self.pieces.tetris_shapes[6]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[6]
 		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
-		# 	self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		self.new_stone()
 
@@ -272,9 +272,9 @@ class Game:
 		self.pieces.curr_piece = self.pieces.next_piece[:]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		# Randomly select next piece
-		self.pieces.next_piece = self.pieces.tetris_shapes[6]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[6]
 		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
-		# 	self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# Add in constraints for x-position and y-position
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
@@ -457,7 +457,7 @@ Press space to continue""")
 		return height_array
 
 
-	def height_std(self, board):
+	def height_max(self, board):
 		"""
 		AI algorithm
 		------------
@@ -465,6 +465,15 @@ Press space to continue""")
 		"""
 		heights = self.heights(board)
 		return max(heights)
+
+	def height_std(self, board):
+		"""
+		AI algorithm
+		------------
+		Return: Standard deviation of heights
+		"""
+		heights = self.heights(board)
+		return np.std(heights)
 
 
 	def holes_blockages(self, board):
@@ -562,7 +571,7 @@ Press space to continue""")
 			for i in range(self.pieces.num_places(list_rotations[j])):
 				board_copy = copy.deepcopy(self.board_class.board)
 				game_state = self.drop_ai(board_copy, list_rotations[j], i, 0)
-				game_state_dictionary[(j, i - 4)] = game_state
+				game_state_dictionary[(j, i - 4)] = game_state # rotation, number of movements
 		return game_state_dictionary
 
 
@@ -593,12 +602,18 @@ Press space to continue""")
 		score = -float('inf')
 		keys = []
 		for key, value in game_states_dictionary.items():
-			score_holder[key] = self.evaluate(value, [1, 0, 0, 0])
+			score_holder[key] = self.evaluate(value, [-1, -1, 10000, 1])
 			if score_holder[key] > score:
 				keys = [key]
 				score = score_holder[key]
 			elif score_holder[key] == score:
 				keys.append(key)
+		move = float('inf')
+		movement = None
+		# for i in range(len(keys)):
+		# 	if keys[i][1] < move:
+		# 		move = i
+		# 		movement = keys[i]
 		return random.choice(keys)
 
 
@@ -609,10 +624,18 @@ Press space to continue""")
 		Return: Move according to the best move found in find_best
 		"""
 		num_rotations, num_moves = self.find_best()
-		print(num_moves, num_rotations)
+		# print(num_moves, num_rotations)
 		for _ in range(num_rotations):
 			self.rotate_piece_with_constraints()
-		self.move(num_moves)
+		is_six = False
+		for val in self.pieces.curr_piece[0]:
+			if val == 6:
+				is_six = True
+		if is_six:
+			self.move(num_moves - 1)
+		# self.move(-5)
+		else:
+			self.move(num_moves)
 
 
 	def run_ai(self):
