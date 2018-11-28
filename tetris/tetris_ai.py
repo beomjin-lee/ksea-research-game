@@ -185,7 +185,9 @@ class Game:
 		self.default_font = pygame.font.Font(pygame.font.get_default_font(), 12)
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[6]
+		while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		self.new_stone()
 
@@ -270,7 +272,9 @@ class Game:
 		self.pieces.curr_piece = self.pieces.next_piece[:]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		# Randomly select next piece
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[6]
+		while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
+			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# Add in constraints for x-position and y-position
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
@@ -535,6 +539,7 @@ Press space to continue""")
 		return np.mean(gucci_fullness)
 
 
+
 	def game_states(self):
 		"""
 		AI algorithm
@@ -576,6 +581,7 @@ Press space to continue""")
 			utility += weight * feature
 		return utility
 
+
 	def find_best(self):
 		"""
 		AI algorithm
@@ -587,7 +593,7 @@ Press space to continue""")
 		score = -float('inf')
 		keys = []
 		for key, value in game_states_dictionary.items():
-			score_holder[key] = self.evaluate(value, [-1, -1, 10, 1])
+			score_holder[key] = self.evaluate(value, [-2 , -2, 999 , 3])
 			if score_holder[key] > score:
 				keys = [key]
 				score = score_holder[key]
@@ -605,7 +611,7 @@ Press space to continue""")
 		num_rotations, num_moves = self.find_best()
 		for _ in range(num_rotations):
 			self.rotate_piece_with_constraints()
-		self.move(num_moves)
+		self.move(num_moves - 1)
 
 
 	def run_ai(self):

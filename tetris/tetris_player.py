@@ -23,7 +23,7 @@ import random
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 30
+maxfps = 15
 
 colors = [
 	(0,   0,   0),
@@ -185,8 +185,8 @@ class Game:
 		self.default_font = pygame.font.Font(pygame.font.get_default_font(), 12)
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		self.new_stone()
 
 
@@ -268,9 +268,9 @@ class Game:
 		""" Back-end: Adds a new stone """
 		# Copy the next shape into curr_piece
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
+		self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		# Randomly select next piece
-		self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# Add in constraints for x-position and y-position
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
