@@ -23,7 +23,7 @@ import random
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 30
+maxfps = 5
 
 colors = [
 	(0,   0,   0),
@@ -186,8 +186,8 @@ class Game:
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 		self.pieces.next_piece = self.pieces.tetris_shapes[6]
-		while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
+		# 	self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		self.new_stone()
 
@@ -273,8 +273,8 @@ class Game:
 		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		# Randomly select next piece
 		self.pieces.next_piece = self.pieces.tetris_shapes[6]
-		while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
-			self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
+		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
+		# 	self.pieces.next_piece = self.pieces.tetris_shapes[ rand(len(self.pieces.tetris_shapes.keys())) + 1]
 		# Add in constraints for x-position and y-position
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
@@ -593,7 +593,7 @@ Press space to continue""")
 		score = -float('inf')
 		keys = []
 		for key, value in game_states_dictionary.items():
-			score_holder[key] = self.evaluate(value, [-2 , -2, 999 , 3])
+			score_holder[key] = self.evaluate(value, [1, 0, 0, 0])
 			if score_holder[key] > score:
 				keys = [key]
 				score = score_holder[key]
@@ -609,9 +609,10 @@ Press space to continue""")
 		Return: Move according to the best move found in find_best
 		"""
 		num_rotations, num_moves = self.find_best()
+		print(num_moves, num_rotations)
 		for _ in range(num_rotations):
 			self.rotate_piece_with_constraints()
-		self.move(num_moves - 1)
+		self.move(num_moves)
 
 
 	def run_ai(self):
@@ -648,7 +649,7 @@ Press space to continue""")
 			pygame.display.update()
 			self.game_over()
 			# Do not update unless we are on a new piece
-			if curr != self.pieces.curr_piece:
+			if curr is not self.pieces.curr_piece:
 				self.move_best()
 			curr = self.pieces.curr_piece
 			# Pausing, quitting controls
