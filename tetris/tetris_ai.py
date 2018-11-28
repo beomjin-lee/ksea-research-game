@@ -23,7 +23,7 @@ import random
 # FRONT END SETTINGS #
 ######################
 cell_size = 30
-maxfps = 30
+maxfps = 100
 
 colors = [
 	(0,   0,   0),
