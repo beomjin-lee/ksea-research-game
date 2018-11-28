@@ -610,11 +610,11 @@ Press space to continue""")
 				keys.append(key)
 		move = float('inf')
 		movement = None
-		# for i in range(len(keys)):
-		# 	if keys[i][1] < move:
-		# 		move = i
-		# 		movement = keys[i]
-		return random.choice(keys)
+		for i in range(len(keys)):
+			if keys[i][1] < move:
+		 		move = i
+		 		movement = keys[i]
+		return movement
 
 
 	def move_best(self):
