@@ -186,7 +186,6 @@ class Game:
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		pygame.event.set_blocked(pygame.MOUSEMOTION)
 		self.pieces.next_piece = self.pieces.tetris_shapes[ np.random.choice(np.arange(1, 8), p=[0.12, 0.12, 0.12, 0.12, 0.12, 0.2, 0.2]) ]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		self.new_stone()
 
 
@@ -268,18 +267,11 @@ class Game:
 		""" Back-end: Adds a new stone """
 		# Copy the next shape into curr_piece
 		self.pieces.curr_piece = self.pieces.next_piece[:]
-		# self.pieces.next_piece = self.pieces.tetris_shapes[7]
 		# Randomly select next piece
-		# self.pieces.next_piece = self.pieces.tetris_shapes[6]
-		# while self.pieces.next_piece == self.pieces.tetris_shapes[6]:
 		self.pieces.next_piece = self.pieces.tetris_shapes[ np.random.choice(np.arange(1, 8), p=[0.12, 0.12, 0.12, 0.12, 0.12, 0.28, 0.12]) ]
 		# Add in constraints for x-position and y-position
 		self.piece_x = int(self.board_class.x_size // 2 - len(self.pieces.curr_piece) // 2)
 		self.piece_y = 0
-
-		# if self.check_collision(board=self.board_class.board, shape=self.pieces.curr_piece, offset_x=self.piece_x, offset_y=self.piece_y):
-		# 	self.gameover = False
-
 
 	def move(self, delta_x):
 		""" Back-end: Move the piece """
@@ -459,7 +451,7 @@ Press space to continue""")
 		"""
 		AI algorithm
 		------------
-		Return: Standard deviation of heights
+		Return: Max of heights
 		"""
 		heights = self.heights(board)
 		return max(heights)
@@ -533,17 +525,17 @@ Press space to continue""")
 		------------
 		Return: How full the board is currently
 		"""
-		gucci_fullness = []
+		row_fullness = []
 		for i in range(self.board_class.y_size):
 			current_row = board[i]
 			if int(sum(current_row)) == 0:
 				continue
 			for j in range(len(current_row)):
-				fendi_fullness = 0
+				col_fullness = 0
 				if current_row[j] != 0:
-					fendi_fullness += 1
-				gucci_fullness.append(fendi_fullness / 10)
-		return np.mean(gucci_fullness)
+					col_fullness += 1
+				row_fullness.append(fendi_fullness / 10)
+		return np.mean(row_fullness)
 
 
 
@@ -585,13 +577,9 @@ Press space to continue""")
 		fullness_feature = self.fullness(board)
 		max_height_feature = self.height_max(board)
 		utility = 0
-		# if not all(self.board_class.board[10]):
 		for weight, feature in zip(weights, [std_height_feature, holes_blockages_feature, cleared_rows_feature, fullness_feature, max_height_feature]):
 				utility += weight * feature
-		# else:
-		# 	for weight, feature in zip([-1, -2, 10, 1, -1], [std_height_feature, holes_blockages_feature, cleared_rows_feature, fullness_feature, max_height_feature]):
-		# 		utility += weight * feature
-		return utility
+=		return utility
 
 
 	def find_best(self):
